@@ -4,7 +4,8 @@ PageRivet은 여러 HTML, CSS, JavaScript 파일로 구성된 정적 웹 프로�
 
 내장 MCP 서버를 통해 Codex 등의 외부 AI 클라이언트가 현재 프로젝트를 읽고 분석하거나, 사용자의 승인을 거쳐 코드를 수정할 수 있습니다.
 
-> 현재 배포 버전: **1.1.0 Portable**  
+> 현재 배포 버전: **1.1.0 Portable**
+>
 > 배포 형태: **Windows x64 포터블 버전**
 
 ## 주요 기능
@@ -76,6 +77,55 @@ Generic MCP Client에는 수동 연결 정보를 제공합니다. Claude Desktop
 
 MCP 클라이언트의 업데이트에 따라 설정 형식이나 연결 동작이 달라질 수 있습니다. 문제가 발생하면 PageRivet의 **설정 → MCP 설정**에서 현재 연결 상태를 확인하세요.
 
+상단 도구 모음의 MCP 표시는 클라이언트 연결 설정을 기준으로 합니다.
+
+- 녹색 `MCP: 연결됨`: 현재 서버 주소와 인증값이 일치하는 지원 클라이언트가 하나 이상 있음
+- 적색 `MCP: 연결 끊김`: 연결 미설정, 재설정 필요, 상태 확인 오류 또는 서버 시작 실패
+
+`재설정 필요`가 표시되면 **설정 → MCP 설정 → 재설정**을 실행한 뒤 AI 클라이언트를 다시 시작하세요.
+
+## MCP 명령어
+
+일반 사용자가 다음 명령어를 직접 입력할 필요는 없습니다. AI 클라이언트에 원하는 작업을 자연어로 요청하면 AI가 필요한 PageRivet 도구를 선택합니다. 모든 코드 변경은 활성 프로젝트만 대상으로 하며 PageRivet의 검증과 승인 정책을 따릅니다.
+
+| 카테고리 | 명령어 | 설명 |
+|---|---|---|
+| 프로젝트 조회 | `get_application_info` | PageRivet의 버전, 실행 정보와 지원 기능을 확인합니다. |
+| 프로젝트 조회 | `get_project_info` | 현재 열린 프로젝트의 이름, 경로, Revision과 편집 상태를 확인합니다. |
+| 프로젝트 조회 | `get_project_files` | 프로젝트의 HTML·CSS·JavaScript 파일 목록과 크기 정보를 조회합니다. |
+| 프로젝트 조회 | `get_export_preset` | 현재 프로젝트에 선택된 내보내기 프리셋과 제한 조건을 확인합니다. |
+| 코드 읽기 | `read_html` | 기본 페이지인 `index.html`의 적용된 코드를 읽습니다. |
+| 코드 읽기 | `read_html_page` | 파일명을 지정해 원하는 HTML 페이지의 적용된 코드를 읽습니다. |
+| 코드 읽기 | `read_css` | 기본 스타일 파일인 `style.css`의 적용된 코드를 읽습니다. |
+| 코드 읽기 | `read_css_file` | 파일명을 지정해 원하는 CSS 파일의 적용된 코드를 읽습니다. |
+| 코드 읽기 | `read_javascript` | 기본 스크립트 파일인 `script.js`의 적용된 코드를 읽습니다. |
+| 코드 읽기 | `read_javascript_file` | 파일명을 지정해 원하는 JavaScript 파일의 적용된 코드를 읽습니다. |
+| 오류 및 검증 | `get_debug_context` | 오류, 콘솔, 최근 변경과 정상 히스토리를 묶어 AI 디버깅 시작 정보를 제공합니다. |
+| 오류 및 검증 | `get_errors` | 검증, 미리보기, 파일, 내보내기와 MCP에서 기록된 오류를 조회합니다. |
+| 오류 및 검증 | `get_console_log` | 미리보기 브라우저와 에디터의 최신 콘솔 기록을 조회합니다. |
+| 오류 및 검증 | `validate_project` | 파일을 변경하지 않고 프로젝트의 HTML·CSS·JavaScript 전체를 검증합니다. |
+| 오류 및 검증 | `validate_export` | 파일을 만들지 않고 현재 내보내기 프리셋 기준으로 프로젝트를 검증합니다. |
+| 히스토리 | `get_recent_changes` | 변경 주체와 검증 결과를 포함한 최근 프로젝트 변경을 조회합니다. |
+| 히스토리 | `get_history` | 프로젝트 히스토리와 현재 Undo·Redo 위치를 확인합니다. |
+| 히스토리 | `get_history_diff` | 두 히스토리 시점의 파일 변경 내용을 줄 단위로 비교합니다. |
+| 히스토리 | `restore_history` | 선택한 히스토리 상태를 기존 기록을 보존한 새로운 변경으로 복원합니다. |
+| 코드 수정 | `apply_html_patch` | `index.html`에 정확히 일치하는 최소 텍스트 변경을 제안합니다. |
+| 코드 수정 | `apply_css_patch` | `style.css`에 정확히 일치하는 최소 텍스트 변경을 제안합니다. |
+| 코드 수정 | `apply_javascript_patch` | `script.js`에 정확히 일치하는 최소 텍스트 변경을 제안합니다. |
+| 코드 수정 | `apply_project_patch` | 여러 기존 HTML·CSS·JavaScript 파일의 변경을 하나의 작업으로 제안합니다. |
+| HTML 파일 관리 | `create_html_page` | 프로젝트 루트에 새로운 HTML 페이지를 생성합니다. |
+| HTML 파일 관리 | `apply_html_page_patch` | 파일명을 지정해 기존 HTML 페이지의 코드를 수정합니다. |
+| HTML 파일 관리 | `rename_html_page` | HTML 페이지의 이름을 변경합니다. `index.html`은 변경할 수 없습니다. |
+| HTML 파일 관리 | `delete_html_page` | HTML 페이지를 삭제합니다. `index.html`은 삭제할 수 없습니다. |
+| CSS 파일 관리 | `create_css_file` | 프로젝트 루트에 새로운 CSS 파일을 생성합니다. |
+| CSS 파일 관리 | `apply_css_file_patch` | 파일명을 지정해 기존 CSS 파일의 코드를 수정합니다. |
+| CSS 파일 관리 | `rename_css_file` | CSS 파일의 이름을 변경합니다. `style.css`는 변경할 수 없습니다. |
+| CSS 파일 관리 | `delete_css_file` | CSS 파일을 삭제합니다. `style.css`는 삭제할 수 없습니다. |
+| JavaScript 파일 관리 | `create_javascript_file` | 프로젝트 루트에 새로운 JavaScript 파일을 생성합니다. |
+| JavaScript 파일 관리 | `apply_javascript_file_patch` | 파일명을 지정해 기존 JavaScript 파일의 코드를 수정합니다. |
+| JavaScript 파일 관리 | `rename_javascript_file` | JavaScript 파일의 이름을 변경합니다. `script.js`는 변경할 수 없습니다. |
+| JavaScript 파일 관리 | `delete_javascript_file` | JavaScript 파일을 삭제합니다. `script.js`는 삭제할 수 없습니다. |
+
 ## 포터블 데이터
 
 언어·Undo 횟수 등의 일반 설정과 내보내기 프리셋은 실행 후 `App/Data/` 폴더에 생성됩니다. PageRivet 폴더를 이동할 때는 최상위 폴더 전체를 함께 이동하세요.
@@ -126,5 +176,56 @@ Do not run the application directly from inside the ZIP archive, and keep `PageR
 - [Microsoft Edge WebView2 Runtime](https://developer.microsoft.com/microsoft-edge/webview2/)
 
 The required .NET runtime is included in the portable package. General portable settings are stored in `App/Data`, while MCP credentials are generated on first run and stored separately at `%LocalAppData%\PageRivet\Mcp`. MCP credentials are not included in the release archive or the portable application folder.
+
+### MCP connection status
+
+The MCP indicator in the top toolbar reflects the supported client configuration, not merely whether PageRivet's internal server process is running.
+
+- Green `MCP: Connected`: at least one supported client matches the current server endpoint and credentials.
+- Red `MCP: Disconnected`: the connection is missing, requires reconfiguration, could not be checked, or the server failed to start.
+
+If reconfiguration is required, open **Settings → MCP Settings → Reconfigure**, then restart the AI client.
+
+### MCP command reference
+
+You do not need to type these tool names directly. Describe the task in natural language and the AI client will select the PageRivet tools it needs. Code-changing tools target only the active project and follow PageRivet's validation and approval policy.
+
+| Category | Command | Description |
+|---|---|---|
+| Project overview | `get_application_info` | View PageRivet's version, runtime information, and supported capabilities. |
+| Project overview | `get_project_info` | View the active project's name, path, revision, and editing state. |
+| Project overview | `get_project_files` | List the project's HTML, CSS, and JavaScript files with size information. |
+| Project overview | `get_export_preset` | View the selected export preset and its restrictions. |
+| Read source code | `read_html` | Read the applied source of the default `index.html` page. |
+| Read source code | `read_html_page` | Read the applied source of a named HTML page. |
+| Read source code | `read_css` | Read the applied source of the default `style.css` file. |
+| Read source code | `read_css_file` | Read the applied source of a named CSS file. |
+| Read source code | `read_javascript` | Read the applied source of the default `script.js` file. |
+| Read source code | `read_javascript_file` | Read the applied source of a named JavaScript file. |
+| Diagnostics and validation | `get_debug_context` | Collect errors, console entries, recent changes, and the last valid history state for AI debugging. |
+| Diagnostics and validation | `get_errors` | View recorded validation, preview, file, export, and MCP errors. |
+| Diagnostics and validation | `get_console_log` | View the latest preview browser and editor console entries. |
+| Diagnostics and validation | `validate_project` | Validate all applied HTML, CSS, and JavaScript without changing files. |
+| Diagnostics and validation | `validate_export` | Validate the project against the selected export preset without creating output. |
+| History | `get_recent_changes` | View recent changes, including their origin and validation result. |
+| History | `get_history` | View project history and the current undo/redo position. |
+| History | `get_history_diff` | Compare two history snapshots with a line-based diff. |
+| History | `restore_history` | Restore a snapshot as a new change while preserving existing history. |
+| Modify code | `apply_html_patch` | Propose exact minimal text replacements for `index.html`. |
+| Modify code | `apply_css_patch` | Propose exact minimal text replacements for `style.css`. |
+| Modify code | `apply_javascript_patch` | Propose exact minimal text replacements for `script.js`. |
+| Modify code | `apply_project_patch` | Propose one atomic change across multiple existing HTML, CSS, and JavaScript files. |
+| Manage HTML files | `create_html_page` | Create a new root-level HTML page. |
+| Manage HTML files | `apply_html_page_patch` | Modify a named existing HTML page. |
+| Manage HTML files | `rename_html_page` | Rename an HTML page. `index.html` cannot be renamed. |
+| Manage HTML files | `delete_html_page` | Delete an HTML page. `index.html` cannot be deleted. |
+| Manage CSS files | `create_css_file` | Create a new root-level CSS file. |
+| Manage CSS files | `apply_css_file_patch` | Modify a named existing CSS file. |
+| Manage CSS files | `rename_css_file` | Rename a CSS file. `style.css` cannot be renamed. |
+| Manage CSS files | `delete_css_file` | Delete a CSS file. `style.css` cannot be deleted. |
+| Manage JavaScript files | `create_javascript_file` | Create a new root-level JavaScript file. |
+| Manage JavaScript files | `apply_javascript_file_patch` | Modify a named existing JavaScript file. |
+| Manage JavaScript files | `rename_javascript_file` | Rename a JavaScript file. `script.js` cannot be renamed. |
+| Manage JavaScript files | `delete_javascript_file` | Delete a JavaScript file. `script.js` cannot be deleted. |
 
 PageRivet currently targets static front-end projects. Backend servers and framework build pipelines such as React, Vue, and Angular are outside the current scope.
