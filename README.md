@@ -4,7 +4,7 @@ PageRivet은 여러 HTML, CSS, JavaScript 파일로 구성된 정적 웹 프로�
 
 내장 MCP 서버를 통해 Codex 등의 외부 AI 클라이언트가 현재 프로젝트를 읽고 분석하거나, 사용자의 승인을 거쳐 코드를 수정할 수 있습니다.
 
-> 현재 배포 버전: **1.1.0 Portable**
+> 현재 배포 버전: **1.1.1 Portable**
 >
 > 배포 형태: **Windows x64 포터블 버전**
 
@@ -17,22 +17,37 @@ PageRivet은 여러 HTML, CSS, JavaScript 파일로 구성된 정적 웹 프로�
 - HTML·CSS·JavaScript 검증과 오류 위치 표시
 - 브라우저 콘솔 및 JavaScript 예외 수집
 - 프로젝트 히스토리, Undo/Redo 및 선택한 기록 복원
+- 비정상 종료 시 미적용 편집 내용 복구
 - 프로젝트 폴더·ZIP·코드 복사 내보내기
 - 외부 파일 변경 감지
 - 한국어·영어 UI와 내장 가이드
 - 로컬 MCP 서버와 AI 읽기·쓰기·디버그 도구
 
+## 1.1.1 안정화
+
+1.1.1은 새로운 편집 기능이나 MCP 기능 범위를 확장하는 버전이 아니라, 1.1.0의 기존 기능을 더 안정적으로 유지하기 위한 하드닝 버전입니다.
+
+- MainForm에 집중되어 있던 UI 작업 흐름을 Coordinator와 Panel/View로 분리
+- 비정상 종료 시 `Apply` 전 편집 버퍼를 복구할 수 있는 Recovery 추가
+- 오류·콘솔·History·Revision 정보를 이용한 AI 진단 흐름 보강
+- MCP 진단 응답에서 토큰·API key·사용자 절대 경로 등 민감정보 제거
+- 대량 파일, 5MB 소스, 500단계 History, 반복 Apply/Save/MCP/FileSystemWatcher에 대한 Stress·Soak 테스트 추가
+- PDB의 파일·라인 기반 진단 정보는 유지하면서 실제 개발 PC 경로를 `/_/`로 정규화
+
+최종 검증은 일반 Release 271개, Stress 3개, Soak 2개로 총 276개 항목이 모두 성공했으며 Release 빌드는 경고 0개, 오류 0개를 기준으로 합니다.
+
 ## 다운로드 및 실행
 
-1. [Releases](https://github.com/raneree/PageRivet/releases)에서 최신 `PageRivet-1.1.0-Portable.zip`을 다운로드합니다.
+1. [Releases](https://github.com/raneree/PageRivet/releases)에서 최신 `PageRivet-1.1.1-Portable.zip`을 다운로드합니다.
 2. ZIP 파일의 압축을 원하는 폴더에 완전히 풉니다.
 3. 최상위 폴더의 `PageRivetLauncher.exe`를 실행합니다.
 
 ZIP 파일 안에서 직접 실행하지 마세요. 다음 폴더 구조를 유지해야 합니다.
 
 ```text
-PageRivet-1.1.0-Portable/
+PageRivet-1.1.1-Portable/
 ├─ PageRivetLauncher.exe
+├─ PageRivetLauncher.pdb
 └─ App/
    ├─ PageRivet.exe
    ├─ portable.flag
@@ -142,7 +157,15 @@ WebView2 사용자 데이터는 Windows의 다음 위치에 별도로 생성될 
 %LocalAppData%\PageRivet\WebView2
 ```
 
-PageRivet을 제거하려면 압축을 풀었던 폴더를 삭제하면 됩니다. MCP 연결 정보와 WebView2 사용자 데이터까지 모두 제거하려면 `%LocalAppData%\PageRivet` 폴더도 별도로 정리할 수 있습니다.
+비정상 종료에 대비한 미적용 편집 버퍼 Recovery는 다음 위치에 저장됩니다.
+
+```text
+%LocalAppData%\PageRivet\Recovery
+```
+
+정상 종료, Apply, 편집 내용 폐기 또는 프로젝트 닫기 시 해당 Recovery 데이터는 정리됩니다.
+
+PageRivet을 제거하려면 압축을 풀었던 폴더를 삭제하면 됩니다. MCP 연결 정보, WebView2 사용자 데이터와 Recovery 데이터까지 모두 제거하려면 `%LocalAppData%\PageRivet` 폴더도 별도로 정리할 수 있습니다.
 
 ## 현재 지원 범위
 
@@ -162,9 +185,13 @@ PageRivet is a portable Windows desktop editor for creating, editing, validating
 
 It also runs a local MCP server, allowing supported external AI clients to inspect the active project and propose or apply changes through PageRivet's validation, approval, and history workflow.
 
+### 1.1.1 stabilization
+
+Version 1.1.1 focuses on hardening rather than expanding the editor or MCP feature scope. It includes UI responsibility separation, recovery of unapplied editor buffers after abnormal termination, richer diagnostics with sensitive-data redaction, stress/soak coverage, and normalized PDB source paths while preserving file/line diagnostics.
+
 ### Quick start
 
-1. Download `PageRivet-1.1.0-Portable.zip` from [Releases](https://github.com/raneree/PageRivet/releases).
+1. Download `PageRivet-1.1.1-Portable.zip` from [Releases](https://github.com/raneree/PageRivet/releases).
 2. Extract the entire archive.
 3. Run `PageRivetLauncher.exe` from the top-level folder.
 
@@ -175,7 +202,7 @@ Do not run the application directly from inside the ZIP archive, and keep `PageR
 - 64-bit Windows 10 version 1809 or later, or Windows 11
 - [Microsoft Edge WebView2 Runtime](https://developer.microsoft.com/microsoft-edge/webview2/)
 
-The required .NET runtime is included in the portable package. General portable settings are stored in `App/Data`, while MCP credentials are generated on first run and stored separately at `%LocalAppData%\PageRivet\Mcp`. MCP credentials are not included in the release archive or the portable application folder.
+The required .NET runtime is included in the portable package. General portable settings are stored in `App/Data`, while MCP credentials are generated on first run and stored separately at `%LocalAppData%\PageRivet\Mcp`. Recovery data for unapplied editor buffers is stored under `%LocalAppData%\PageRivet\Recovery` and is cleaned up on normal completion of the relevant session. MCP credentials are not included in the release archive or the portable application folder.
 
 ### MCP connection status
 
