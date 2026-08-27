@@ -1,26 +1,12 @@
-# PageRivet 2.3.1
+# PageRivet 2.3.3
 
-PageRivet은 정적 웹 프로젝트를 만들고 편집하며, 사용자의 승인을 거쳐 AI 클라이언트와 안전하게 협업할 수 있는 Windows 데스크톱 프로그램입니다.
+PageRivet은 정적 웹 프로젝트를 만들고 편집하며 AI 클라이언트와 안전하게 협업할 수 있는 Windows 데스크톱 프로그램입니다.
 
-> 현재 배포 버전: **2.3.1 Portable**
+> 현재 배포 버전: **2.3.3 Portable**
 >
 > 배포 형태: **Windows x64 포터블 폴더**
 
 공식 홈페이지: <https://pagerivet.github.io/>
-
-## 2.3.1 주요 변경
-
-- YAML `.yml`, `.yaml` 소스 관리
-- Markdown `.md`, `.markdown` 소스 관리
-- SCSS `.scss` 소스 관리
-- ES Module `.mjs` 소스 관리
-- TypeScript `.ts` 소스 관리
-- 확장자별 구문 강조와 전용 텍스트 소스 탭
-- 추가 소스의 저장, 외부 변경 감지, History, Recovery 및 내보내기 지원
-- 추가 소스용 MCP 읽기·생성·패치·이름 변경·삭제 Tool
-- 내장 MCP Tool 47개
-
-SCSS 및 TypeScript 파일을 편집하고 보존할 수 있지만 PageRivet이 Sass 또는 TypeScript 컴파일러를 실행하지는 않습니다. Markdown 렌더링과 YAML 변환도 이번 버전에는 포함되지 않습니다.
 
 ## 주요 기능
 
@@ -35,17 +21,17 @@ SCSS 및 TypeScript 파일을 편집하고 보존할 수 있지만 PageRivet이 
 - 프로젝트 폴더·ZIP·코드 복사 내보내기
 - 외부 파일 변경 감지
 - 한국어·영어 UI
-- 로컬 MCP 서버와 승인 기반 AI 쓰기
+- 로컬 MCP 서버와 56개 AI 협업 Tool
 - Claude Desktop용 동봉 Bridge
 
 ## 다운로드 및 실행
 
-1. 공식 Releases에서 `PageRivet-2.3.1-Windows-x64-Portable.zip`을 다운로드합니다.
+1. 공식 Releases에서 `PageRivet-2.3.3-Windows-x64-Portable.zip`을 다운로드합니다.
 2. ZIP 파일 전체를 원하는 폴더에 풉니다.
 3. 최상위 폴더의 `PageRivetLauncher.exe`를 실행합니다.
 
 ```text
-PageRivet-2.3.1-Windows-x64-Portable/
+PageRivet-2.3.3-Windows-x64-Portable/
 ├─ PageRivetLauncher.exe
 ├─ PageRivetLauncher.pdb
 └─ App/
@@ -86,9 +72,9 @@ project/
 
 절대 경로, 상위 디렉터리 이동, Windows 예약 이름, `.editor` 내부 접근 및 재분석 지점을 이용한 프로젝트 루트 우회는 허용하지 않습니다. `assets/documents`의 Markdown은 관리 리소스로 유지됩니다.
 
-## MCP 추가 Tool
+## MCP Tool
 
-2.3.1에서 다음 Tool이 추가되었습니다.
+추가 텍스트 소스는 다음 Tool로 관리할 수 있습니다.
 
 | Tool | 설명 |
 |---|---|
@@ -98,7 +84,22 @@ project/
 | `rename_text_source` | 추가 소스의 프로젝트 상대 경로를 변경합니다. |
 | `delete_text_source` | 추가 소스를 삭제합니다. |
 
-MCP 쓰기는 현재 활성 프로젝트만 대상으로 하며 Revision 검사, 사용자 승인, 전체 검증, History 및 원자적 저장 정책을 따릅니다.
+PageRivet 본체와 Preview에는 다음 Tool을 사용할 수 있습니다.
+
+| Tool | 설명 |
+|---|---|
+| `get_ui_state` | 현재 언어, 테마와 주요 UI 상태를 조회합니다. |
+| `get_preview_state` | Preview 초기화 여부와 현재 페이지를 조회합니다. |
+| `get_recovery_status` | Recovery 내용을 노출하지 않고 복구 가능 상태를 조회합니다. |
+| `get_mcp_status` | 인증값을 제외한 MCP 서버와 연결 상태를 조회합니다. |
+| `get_mcp_log` | 민감정보가 제거된 최근 MCP 활동 로그를 조회합니다. |
+| `get_export_presets` | 저장된 내보내기 프리셋을 조회합니다. |
+| `save_project` | 현재 프로젝트의 적용된 상태를 저장합니다. |
+| `refresh_preview` | 현재 Preview를 새로고침합니다. |
+| `preview_html_page` | 기존 HTML 페이지를 Preview에 표시합니다. |
+| `export_project` | 기존 프리셋 또는 일회성 설정으로 프로젝트를 내보냅니다. |
+
+MCP 작업은 현재 활성 프로젝트만 대상으로 하며 Revision 검사, 검증, History 및 원자적 저장 경계를 따릅니다.
 
 ## 포터블 데이터와 보안
 
@@ -117,25 +118,27 @@ PageRivet은 정적 프런트엔드 프로젝트를 대상으로 합니다. 백�
 
 ## English
 
-PageRivet 2.3.1 is a portable Windows desktop editor for static web projects. It supports project-relative HTML, CSS, JavaScript, YAML, Markdown, SCSS, MJS, and TypeScript source files through the same validation, history, recovery, export, and MCP approval boundaries.
+PageRivet 2.3.3 is a portable Windows desktop editor for static web projects. It supports project-relative HTML, CSS, JavaScript, YAML, Markdown, SCSS, MJS, and TypeScript source files through the same validation, history, recovery, export, and MCP safety boundaries.
 
-### What's new in 2.3.1
+### Main features
 
-- YAML: `.yml`, `.yaml`
-- Markdown: `.md`, `.markdown`
-- SCSS: `.scss`
-- ES modules: `.mjs`
-- TypeScript: `.ts`
-- A dedicated text-source editor tab with syntax highlighting
-- Source lifecycle support across save, Save As, file watching, history, recovery, and export
-- Five new MCP tools for reading and managing these sources
-
-PageRivet does not compile SCSS or TypeScript and does not render Markdown in this release.
+- Manage multiple HTML, CSS, and JavaScript files
+- Manage YAML, Markdown, SCSS, MJS, and TypeScript sources
+- Manage images, fonts, video, audio, documents, data, web assets, and 3D models
+- Syntax highlighting, code search, and line navigation
+- Static project preview powered by WebView2
+- HTML, CSS, JavaScript, and UTF-8 text-source validation
+- Project History, Undo/Redo, Recovery, file watching, and export
+- Korean and English UI
+- A local MCP server with 56 AI collaboration tools
+- A bundled Bridge for Claude Desktop
 
 ### Quick start
 
-1. Download `PageRivet-2.3.1-Windows-x64-Portable.zip` from the official Releases page.
+1. Download `PageRivet-2.3.3-Windows-x64-Portable.zip` from the official Releases page.
 2. Extract the complete archive.
 3. Run `PageRivetLauncher.exe` from the top-level directory.
 
 The .NET runtime is included. Microsoft Edge WebView2 Runtime is required for preview. MCP credentials and recovery data are stored under the Windows user profile and are not included in the portable folder.
+
+PageRivet targets static front-end projects. It preserves SCSS and TypeScript sources but does not compile them, and it does not run backend servers or framework build pipelines.
